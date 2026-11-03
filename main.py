@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 import requests
 from dotenv import load_dotenv
@@ -42,8 +42,6 @@ class YD:
     timeout = 10
 
     def __init__(self, token: str):
-        if not token:
-            raise ValueError("нет токена")
         self._headers = {"Authorization": f"OAuth {token}"}
 
     def create_folder(self, path_new_folder: str = "/Location_student") -> None:
@@ -80,12 +78,13 @@ class YD:
         print(f"Файл по адресу: '{path_file}' успешно загружен")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Функция для вызова методов у класса. IP -> Geo -> JSON на Яндекс"""
     load_dotenv()
     token = os.getenv("TOKEN")
-    
+
     if not token:
-        raise RuntimeError("TOKEN не найден.")
+        raise RuntimeError("TOKEN не найден. Проверьте .env")
 
     geo_student = GeoLocator()
     geo_data = geo_student.get_location()
@@ -93,3 +92,7 @@ if __name__ == "__main__":
     student = YD(token)
     student.create_folder()
     student.upload_json(geo_data, "/Location_student/geo_student.json")
+
+
+if __name__ == "__main__":
+    main()
